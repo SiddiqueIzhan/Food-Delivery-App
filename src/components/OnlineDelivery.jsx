@@ -1,39 +1,104 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useReducer, useRef, useState } from "react";
 import Card from "./card";
-import { FiFilter } from "react-icons/fi";
-import { RxCaretDown } from "react-icons/rx";
-import { IoSearch } from "react-icons/io5";
 import { IoMdClose, IoMdMenu } from "react-icons/io";
-import { IoOptionsOutline } from "react-icons/io5";
+import SortPopUp from "./sortPopUp";
 
-const Filters = [
+const initFilters = [
+  { text: "Ratings 4.5+", filterKey: "rating" },
+  { text: "Offers", filterKey: "offers" },
+  { text: "Rs.100 - Rs.200", filterKey: "priceRange1" },
+  { text: "> Rs.200", filterKey: "priceRange2" },
+];
+
+const initialSortOptions = [
   {
-    text: "Sort By",
-    icon: <RxCaretDown />,
+    label: "Relevance (Default)",
+    sortKey: "default",
+    status: true,
   },
   {
-    text: "Ratings 4.5+",
-    icon: "",
+    label: "Delivery Time",
+    sortKey: "minTime",
+    status: false,
   },
   {
-    text: "Offers",
-    icon: "",
+    label: "Rating",
+    sortKey: "rating",
+    status: false,
   },
   {
-    text: "Rs.100 - Rs.200",
-    icon: "",
+    label: "Cost: Low to High",
+    sortKey: "priceLowToHigh",
+    status: false,
   },
   {
-    text: "> Rs. 200",
-    icon: "",
+    label: "Cost: High to Low",
+    sortKey: "priceHighToLow",
+    status: false,
   },
 ];
 
-const OnlineDelivery = () => {
+const initialState = {
+  selectedFilters: [],
+  searchQuery: "",
+  selectedSort: "default",
+};
+
+const filterReducer = (state, action) => {
+  switch (action.type) {
+    case "TOGGLE_FILTER":
+      const isAlreadySelected = state.selectedFilters.includes(
+        action.filterKey
+      );
+      return {
+        ...state,
+        selectedFilters: isAlreadySelected
+          ? state.selectedFilters.filter((key) => key !== action.filterKey)
+          : [...state.selectedFilters, action.filterKey],
+      };
+    case "SET_SEARCH_QUERY":
+      return { ...state, searchQuery: action.query };
+    case "SET_SORT":
+      return { ...state, selectedSort: action.sort };
+    case "RESET_FILTERS":
+      return initialState;
+    default:
+      return state;
+  }
+};
+
+const OnlineDelivery = ({ showSearch, setShowSearch }) => {
   const [restData, setRestData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
+  const [state, dispatch] = useReducer(filterReducer, initialState);
   const componentRef = useRef();
   const [isAtTop, setIsAtTop] = useState(false);
-  const [showMenu, setShowMenu] = useState(false);
+  const [showOptions, setShowOptions] = useState(false);
+  const [sortOptions, setSortOptions] = useState(initialSortOptions);
+  const handleSelection = (selectedIndex) => {
+    const updatedOptions = sortOptions.map((option, index) => ({
+      ...option,
+      status: index === selectedIndex,
+    }));
+    setSortOptions(updatedOptions);
+  };
+
+  const handleApply = () => {
+    const SelectedSort = sortOptions.find((elem) => {
+      return elem.status === true;
+    });
+    dispatch({ type: "SET_SORT", sort: SelectedSort.sortKey });
+    // Logic to apply the selected option can go here
+    setShowOptions(false);
+  };
+
+  const handleCloseSearch = () => {
+    dispatch({
+      type: "SET_SEARCH_QUERY",
+      query: "",
+    });
+    setShowSearch(false);
+  };
 
   useEffect(() => {
     const fetchRestData = async () => {
@@ -42,9 +107,10 @@ const OnlineDelivery = () => {
       );
       const data = await response.json();
       setRestData(data);
+      setFilteredData(data);
     };
     fetchRestData();
-  }, []);
+  }, [state]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -59,9 +125,55 @@ const OnlineDelivery = () => {
     };
   }, []);
 
+  useEffect(() => {
+    let updatedData = [...restData];
+
+    // Apply selected filters
+    state.selectedFilters.forEach((filterKey) => {
+      if (filterKey === "rating") {
+        updatedData = updatedData.filter((item) => item.rating >= 4.5);
+      } else if (filterKey === "offers") {
+        updatedData = updatedData.filter((item) =>
+          item.offer?.toUpperCase().includes("OFF")
+        );
+      } else if (filterKey === "priceRange1") {
+        updatedData = updatedData.filter(
+          (item) => item.price >= 100 && item.price < 200
+        );
+      } else if (filterKey === "priceRange2") {
+        updatedData = updatedData.filter((item) => item.price >= 200);
+      }
+    });
+
+    // Apply search query
+    if (state.searchQuery) {
+      updatedData = updatedData.filter((item) =>
+        item.title.toLowerCase().includes(state.searchQuery.toLowerCase())
+      );
+    }
+    //Apply Selected Sort
+    if (state.selectedSort) {
+      updatedData.sort((a, b) => {
+        if (state.selectedSort === "priceLowToHigh") {
+          return a.price - b.price;
+        } else if (state.selectedSort === "priceHighToLow") {
+          return b.price - a.price;
+        } else if (state.selectedSort === "rating") {
+          return b.rating - a.rating;
+        } else if (state.selectedSort === "minTime") {
+          return a.minTime - b.minTime;
+        } else {
+          return 0;
+        }
+      });
+    }
+
+    setFilteredData(updatedData);
+  }, [state, restData]);
+
   return (
     <>
-      <div className="max-w-[100vw] md:max-w-[1200px] md:mx-auto p-4">
+      <div className="max-w-[100vw] md:max-w-[1200px] md:mx-auto  p-4">
         <div className="flex items-center justify-between" ref={componentRef}>
           <h1 className="text-gray-800 text-sm md:text-2xl font-extrabold mb-2">
             Restaurants with online food delivery in Chhindwara
@@ -70,64 +182,89 @@ const OnlineDelivery = () => {
         <div
           className={`${
             isAtTop
-              ? "h-10 md:h-20 w-[100vw] fixed top-0 left-0 z-[70] bg-white"
+              ? `${
+                  showSearch ? "h-24" : "h-10"
+                } md:h-20 w-[100vw] fixed top-0 left-0 z-[70] bg-white`
               : ""
           }`}
         >
-          <div className="w-full md:w-[1175px] mx-auto flex items-center justify-between mt-2 md:mt-3">
-            {/* Mobile: Show filter icon when scrolled to top */}
-            <div className="md:hidden">
-              {isAtTop ? (
-                <IoOptionsOutline className="text-lg cursor-pointer ml-4" />
-              ) : (
-                <div className="flex flex-wrap gap-2 overflow-x-scroll no-scrollbar">
-                  {Filters.map((filterName) => (
-                    <span
-                      key={filterName.text}
-                      className="py-1 px-1.5 rounded-[18px] shadow-sm text-[9px] border border-gray-300 font-medium flex items-center gap-[4px] hover:bg-black hover:text-white duration-500 cursor-pointer whitespace-nowrap"
-                    >
-                      {filterName.text}
-                      {filterName.icon && <i>{filterName.icon}</i>}
-                    </span>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* Desktop: Always show all filters */}
-            <div className="hidden md:flex w-full flex-nowrap gap-2">
-              {Filters.map((filterName) => (
+          <div className="w-full md:w-[1175px] mx-auto flex items-center justify-center gap-3 flex-col md:justify-between md:flex-row mt-2 relative">
+            {showOptions && (
+              <SortPopUp
+                sortOptions={sortOptions}
+                setShowOptions={setShowOptions}
+                handleSelection={handleSelection}
+                handleApply={handleApply}
+              />
+            )}
+            <div
+              className={`flex w-full gap-2 h-[23.5px] md:h-9 overflow-x-scroll whitespace-nowrap no-scrollbar ${
+                !showSearch && "mt-1 md:mt-3"
+              } ${
+                isAtTop ? "justify-center" : ""
+              } md:justify-start md:relative`}
+            >
+              <span
+                className={`py-1 px-1.5 md:px-3 md:py-1.5 rounded-[18px] shadow-sm text-[9px] md:text-sm border border-gray-300 font-medium cursor-pointer ${"hover:bg-orange-500 hover:text-white"}`}
+                onClick={() => setShowOptions(true)}
+              >
+                Sort By
+              </span>
+              {initFilters.map((filter) => (
                 <span
-                  key={filterName.text}
-                  className="py-1 px-3 rounded-[18px] shadow-sm text-sm border border-gray-300 font-medium flex items-center gap-[4px] hover:bg-black hover:text-white duration-500 cursor-pointer"
+                  key={filter.text}
+                  className={`py-1 px-1.5 md:px-3 md:py-1.5 rounded-[18px] shadow-sm text-[9px] md:text-sm border border-gray-300 font-medium cursor-pointer ${
+                    state.selectedFilters.includes(filter.filterKey)
+                      ? "bg-black text-white"
+                      : "hover:bg-orange-500 hover:text-white"
+                  }`}
+                  onClick={() =>
+                    dispatch({
+                      type: "TOGGLE_FILTER",
+                      filterKey: filter.filterKey,
+                    })
+                  }
                 >
-                  {filterName.text}
-                  {filterName.icon && <i>{filterName.icon}</i>}
+                  {filter.text}
                 </span>
               ))}
             </div>
 
             {/* Search Bar */}
-            <div
-              className={`w-[200px] md:w-[500px] p-2 md:p-4 bg-gray-100 rounded-xl flex items-center justify-between mr-4 ${
-                isAtTop ? "" : "hidden"
-              }`}
-            >
-              <input
-                type="text"
-                placeholder="Search for restaurant and food"
-                className="w-full outline-none bg-transparent text-[9px] md:text-lg"
-              />
-              <IoSearch className="" />
-            </div>
+            {showSearch && (
+              <div
+                className={`w-[200px] md:min-w-[500px] p-2 md:p-4 bg-gray-100 rounded-xl flex items-center justify-between mr-4 ${
+                  isAtTop ? "" : "fixed top-2 right-7 z-50 md:right-[167.5px]"
+                }`}
+              >
+                <input
+                  type="text"
+                  placeholder="Search for restaurant and food"
+                  className={`w-full outline-none bg-transparent text-[9px] md:text-lg`}
+                  value={state.searchQuery}
+                  onChange={(e) =>
+                    dispatch({
+                      type: "SET_SEARCH_QUERY",
+                      query: e.target.value,
+                    })
+                  }
+                />
+                <IoMdClose onClick={handleCloseSearch} className="md:text-xl" />
+              </div>
+            )}
           </div>
         </div>
 
-        <div className="w-full grid grid-cols-2 md:grid-cols-4 mt-5 relative z-10 gap-4 md:gap-8">
-          {restData.map((cat, index) => (
+        <div
+          className={`w-full flex flex-wrap ${
+            isAtTop ? "mt-16 md:mt-20" : "mt-5"
+          } gap-4 md:gap-6`}
+        >
+          {filteredData.map((cat, index) => (
             <Card key={index} cat={cat} show={true} />
           ))}
         </div>
+
         <hr className="w-full mt-2.5 md:mt-5" />
       </div>
     </>

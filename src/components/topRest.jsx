@@ -7,7 +7,6 @@ const TopRest = () => {
   const [restData, setRestData] = useState([]);
   const [slide, setSlide] = useState(0);
   const [cardWidth, setCardWidth] = useState(155);
-  console.log(12, slide, cardWidth >= 273, cardWidth, cardWidth * slide);
   useEffect(() => {
     // Fetch restaurant data
     const fetchRestData = async () => {
@@ -34,39 +33,12 @@ const TopRest = () => {
   }, []);
 
   return (
-    // <div className="max-w-[100vw] md:max-w-[1200px] md:mx-auto px-4 md:p-4">
-    //   <div className="flex items-center justify-between">
-    //     <h1 className="text-gray-800 text-sm md:text-2xl font-extrabold">
-    //       Top restaurant chains in Chhindwara
-    //     </h1>
-    //     <div className="flex gap-4">
-    //       <div className="rounded-full bg-gray-300 p-2 md:p-3">
-    //         <FaArrowLeft
-    //           className=" text-gray-800"
-    //           onClick={() => slide > 0 && setSlide(slide - 4)}
-    //         />
-    //       </div>
-    //       <div className="rounded-full bg-gray-300 p-2 md:p-3">
-    //         <FaArrowRight
-    //           className=" text-gray-800"
-    //           onClick={() => slide < 12 && setSlide(slide + 4)}
-    //         />
-    //       </div>
-    //     </div>
-    //   </div>
-    //   <div className="w-full flex overflow-hidden mt-5 relative z-10 gap-4 md:gap-8">
-    //     {restData.map((cat, index) => (
-    //       <Card key={index} cat={cat} slide={slide} />
-    //     ))}
-    //   </div>
-    //   <hr className="w-full mt-2.5 md:mt-5" />
-    // </div>
     <div className="max-w-[100vw] md:max-w-[1200px] md:mx-auto px-4 md:p-4">
       <div className="flex items-center justify-between">
         <h1 className="text-gray-800 text-sm md:text-2xl font-extrabold">
           Top restaurant chains in Chhindwara
         </h1>
-        <div className="flex gap-4">
+        <div className="md:flex gap-4 hidden">
           <div className="rounded-full bg-gray-300 p-2 md:p-3">
             <FaArrowLeft
               className=" text-gray-800"
@@ -86,9 +58,15 @@ const TopRest = () => {
           </div>
         </div>
       </div>
-      <div className="w-full flex overflow-hidden mt-5 relative z-10 gap-4 md:gap-8">
+      <div className="w-full flex md:overflow-hidden mt-5 relative z-10 gap-4 md:gap-8 overflow-scroll no-scrollbar">
         {restData.map((cat, index) => (
-          <Card key={index} cat={cat} slide={slide} cardWidth={cardWidth} show={false}/>
+          <Card
+            key={index}
+            cat={cat}
+            slide={slide}
+            cardWidth={cardWidth}
+            show={false}
+          />
         ))}
       </div>
       <hr className="w-full mt-2.5 md:mt-5" />

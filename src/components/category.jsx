@@ -25,7 +25,6 @@ const Category = () => {
     try {
       const response = await fetch("http://localhost:5000/categories");
       const data = await response.json();
-      console.log(data);
       setCategory(data);
     } catch (err) {
       console.error(err);

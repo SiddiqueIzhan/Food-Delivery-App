@@ -44,8 +44,12 @@ const NavLinks = [
   },
 ];
 
-const NavBar = () => {
+const NavBar = ({ showSearch, setShowSearch }) => {
   const [showMenu, setShowMenu] = useState(false);
+  const handleSearch = () => {
+    setShowSearch(true);
+    setShowMenu(false);
+  };
   return (
     <>
       <div
@@ -74,6 +78,7 @@ const NavBar = () => {
                 <a
                   href="#"
                   className="text-gray-600 hover:text-orange-500 flex items-center gap-2.5 duration-500 relative"
+                  onClick={() => link.text === "Search" && handleSearch()}
                 >
                   <span className="text-xl">{link.icon}</span>
                   <span>{link.text}</span>
@@ -97,22 +102,26 @@ const NavBar = () => {
               <RxCaretDown className="text-2xl text-orange-500" />
             </div>
           </div>
-          <ul className="hidden md:flex gap-[50px]">
-            {NavLinks.map((link) => (
-              <li key={link.id}>
-                <a
-                  href="#"
-                  className="text-gray-600 hover:text-orange-500 flex items-center gap-2.5 duration-500 relative"
-                >
-                  <span className="text-xl">{link.icon}</span>
-                  <span>{link.text}</span>
-                  <sup className="absolute text-yellow-500 -right-7 top-1 text-[10px] font-semibold">
-                    {link.sup}
-                  </sup>
-                </a>
-              </li>
-            ))}
-          </ul>
+          {!showSearch && (
+            <ul className="hidden md:flex gap-[50px]">
+              {NavLinks.map((link) => (
+                <li key={link.id}>
+                  <a
+                    href="#"
+                    className="text-gray-600 hover:text-orange-500 flex items-center gap-2.5 duration-500 relative"
+                    onClick={() => link.text === "Search" && handleSearch()}
+                  >
+                    <span className="text-xl">{link.icon}</span>
+                    <span>{link.text}</span>
+                    <sup className="absolute text-yellow-500 -right-7 top-1 text-[10px] font-semibold">
+                      {link.sup}
+                    </sup>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )}
+
           <IoMdMenu
             onClick={() => setShowMenu(true)}
             className="inline md:hidden"
