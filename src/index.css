@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.black-overlay {
+  background: rgb(0, 0, 0, 0.5);
+}
+
+.black-gradient {
+  background: linear-gradient(#00000000, #000000f5);
+}
