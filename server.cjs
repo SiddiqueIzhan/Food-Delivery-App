@@ -4,7 +4,7 @@ const path = require("path");
 const cors = require("cors");
 
 const app = express();
-const port = 5000;
+const port = process.env.PORT || 5000;
 
 // Middleware to parse JSON bodies
 app.use(express.json());
@@ -59,5 +59,5 @@ app.get("/top-restaurant-chains", (req, res) => {
 
 // Start the server
 app.listen(port, () => {
-  console.log(`Server is listening at http://localhost:${port}`);
+  console.log(`Server is listening on port ${port}`);
 });
