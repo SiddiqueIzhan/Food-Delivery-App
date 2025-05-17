@@ -102,9 +102,8 @@ const OnlineDelivery = ({ showSearch, setShowSearch }) => {
 
   useEffect(() => {
     const fetchRestData = async () => {
-      const response = await fetch(
-        "http://localhost:5000/top-restaurant-chains"
-      );
+      const apiUrl = import.meta.env.VITE_API_URL;
+      const response = await fetch(`${apiUrl}/top-restaurant-chains`);
       const data = await response.json();
       setRestData(data);
       setFilteredData(data);
