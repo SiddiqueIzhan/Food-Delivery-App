@@ -23,7 +23,8 @@ const Category = () => {
 
   const fetchCategories = async () => {
     try {
-      const response = await fetch("http://localhost:5000/categories");
+      const apiUrl = import.meta.env.VITE_API_URL;
+      const response = await fetch(`${apiUrl}/categories`);
       const data = await response.json();
       setCategory(data);
     } catch (err) {
