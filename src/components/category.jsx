@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { apiUrl } from "./card";
 
 const Category = () => {
   const [category, setCategory] = useState([]);
@@ -23,7 +24,6 @@ const Category = () => {
 
   const fetchCategories = async () => {
     try {
-      const apiUrl = import.meta.env.VITE_API_URL;
       const response = await fetch(`${apiUrl}/categories`);
       const data = await response.json();
       setCategory(data);
@@ -66,7 +66,7 @@ const Category = () => {
               transform: `translateX(${-itemWidth * slide}px)`,
             }}
           >
-            <img src={`http://localhost:5000/images/${cat.image}`} alt="food" />
+            <img src={`${apiUrl}/images/${cat.image}`} alt="food" />
           </div>
         ))}
       </div>

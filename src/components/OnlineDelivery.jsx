@@ -1,5 +1,5 @@
 import React, { useEffect, useReducer, useRef, useState } from "react";
-import Card from "./card";
+import Card, { apiUrl } from "./card";
 import { IoMdClose, IoMdMenu } from "react-icons/io";
 import SortPopUp from "./sortPopUp";
 
@@ -102,7 +102,6 @@ const OnlineDelivery = ({ showSearch, setShowSearch }) => {
 
   useEffect(() => {
     const fetchRestData = async () => {
-      const apiUrl = import.meta.env.VITE_API_URL;
       const response = await fetch(`${apiUrl}/top-restaurant-chains`);
       const data = await response.json();
       setRestData(data);

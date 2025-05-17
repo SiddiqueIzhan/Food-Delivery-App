@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
 import { MdStars } from "react-icons/md";
-import Card from "./card";
+import Card, { apiUrl } from "./card";
 
 const TopRest = () => {
   const [restData, setRestData] = useState([]);
@@ -10,7 +10,6 @@ const TopRest = () => {
   useEffect(() => {
     // Fetch restaurant data
     const fetchRestData = async () => {
-      const apiUrl = import.meta.env.VITE_API_URL;
       const response = await fetch(`${apiUrl}/top-restaurant-chains`);
       const data = await response.json();
       setRestData(data);

@@ -1,6 +1,8 @@
 import React from "react";
 import { MdStars } from "react-icons/md";
 
+export const apiUrl = import.meta.env.VITE_API_URL;
+
 const Card = ({ cat, slide, cardWidth, show }) => {
   const value = slide * cardWidth;
   return (
@@ -14,7 +16,7 @@ const Card = ({ cat, slide, cardWidth, show }) => {
     >
       <div className="w-full h-[91px] md:h-[182px] rounded-2xl bg-red-400 relative overflow-hidden">
         <img
-          src={`http://localhost:5000/images/${cat.image}`}
+          src={`${apiUrl}/images/${cat.image}`}
           alt="rest_image"
           className="object-cover absolute hover:scale-[1.2] duration-500 "
         />
