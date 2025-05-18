@@ -40,13 +40,13 @@ const Category = () => {
   }, []);
 
   return (
-    <div className="max-w-[100vw] md:max-w-[1200px] md:mx-auto p-4 md:mt-3">
+    <div className="max-w-[100vw] md:max-w-[1200px] md:mx-auto p-4">
       <div className="flex items-center justify-between">
         <h1 className="text-gray-800 text-sm md:text-2xl font-extrabold">
           What's on your mind?
         </h1>
       </div>
-      <div className="w-full flex overflow-hidden mt-5 relative z-10">
+      <div className="w-full h-[102.5px] md:h-[180px] flex overflow-hidden mt-5 relative z-10">
         {category.map((cat) => (
           <div
             key={cat.path}

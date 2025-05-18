@@ -89,7 +89,7 @@ const NavBar = ({ showSearch, setShowSearch }) => {
         </div>
       </div>
 
-      <div className="max-w-[100vw] md:w-full h-12 md:h-20 shadow-md bg-white py-2 px-4 md:p-4 sticky top-0 z-30">
+      <div className="w-full h-12 md:h-20 shadow-md bg-white py-2 px-4 md:p-4 sticky top-0 z-20">
         <div className="max-w-[1100px] mx-auto flex justify-between items-center">
           <div className="flex gap-[50px] items-center">
             <span className="w-8 h-8 md:w-12 md:h-12 flex items-center justify-center rounded-lg bg-orange-500">

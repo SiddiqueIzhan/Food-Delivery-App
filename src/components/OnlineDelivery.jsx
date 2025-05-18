@@ -212,9 +212,8 @@ const OnlineDelivery = ({ showSearch, setShowSearch }) => {
                 <span
                   key={filter.text}
                   className={`py-1 px-1.5 md:px-3 md:py-1.5 rounded-[18px] shadow-sm text-[9px] md:text-sm border border-gray-300 font-medium cursor-pointer ${
-                    state.selectedFilters.includes(filter.filterKey)
-                      ? "bg-black text-white"
-                      : "hover:bg-orange-500 hover:text-white"
+                    state.selectedFilters.includes(filter.filterKey) &&
+                    "bg-black text-white"
                   }`}
                   onClick={() =>
                     dispatch({
@@ -254,13 +253,26 @@ const OnlineDelivery = ({ showSearch, setShowSearch }) => {
         </div>
 
         <div
-          className={`w-full grid grid-cols-2 md:grid-cols-4 ${
-            isAtTop ? "mt-16 md:mt-20" : "mt-5"
-          } gap-4 md:gap-6`}
+          className={`w-full h-[90vh] ${
+            filteredData.length
+              ? "grid grid-cols-2 md:grid-cols-4 auto-rows-max"
+              : "flex items-center justify-center"
+          } ${isAtTop ? "mt-16 md:mt-20" : "mt-5"} gap-4 md:gap-6`}
         >
-          {filteredData.map((cat, index) => (
-            <Card key={index} cat={cat} show={true} topSect={false} />
-          ))}
+          {filteredData.length ? (
+            <>
+              {filteredData.map((cat, index) => (
+                <Card key={index} cat={cat} show={true} topSect={false} />
+              ))}
+            </>
+          ) : (
+            <div className="w-[30vh] h-[40vh] flex flex-col items-center gap-3">
+              <img src="\images\cancel.png" alt="not-found" className="w-1/2" />
+              <span className="text-black-500 text-xl text-center font-extrabold">
+                Items Not Found
+              </span>
+            </div>
+          )}
         </div>
 
         <hr className="w-full mt-2.5 md:mt-5" />

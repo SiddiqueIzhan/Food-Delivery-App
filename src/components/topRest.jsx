@@ -56,7 +56,7 @@ const TopRest = () => {
           </div>
         </div>
       </div>
-      <div className="w-full flex md:overflow-hidden mt-5 relative z-10 gap-4 md:gap-8 overflow-scroll no-scrollbar">
+      <div className="w-full h-[187px] md:h-[334px] flex md:overflow-hidden mt-5 relative z-10 gap-4 md:gap-8 overflow-scroll no-scrollbar">
         {restData.map((cat, index) => (
           <Card
             key={index}
