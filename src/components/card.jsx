@@ -3,18 +3,22 @@ import { MdStars } from "react-icons/md";
 
 export const apiUrl = import.meta.env.VITE_API_URL;
 
-const Card = ({ cat, slide, cardWidth, show }) => {
+const Card = ({ cat, slide, cardWidth, show, topSect }) => {
   const value = slide * cardWidth;
   return (
     <div
       key={cat.path}
-      className={`w-full max-w-[156px] md:max-w-[273px] shrink-0 duration-500 
+      className={`${
+        topSect ? "w-1/2" : "w-full"
+      } md:max-w-[273px] shrink-0 duration-500 
     ease-out`}
       style={{
         transform: show ? "" : `translateX(${value < 1850 ? -value : -1850}px)`,
       }}
     >
-      <div className="w-full h-[91px] md:h-[182px] rounded-2xl bg-red-400 relative overflow-hidden">
+      <div
+        className={`w-full h-[91px] md:h-[182px] rounded-2xl bg-red-400 relative overflow-hidden`}
+      >
         <img
           src={`${apiUrl}/images/${cat.image}`}
           alt="rest_image"

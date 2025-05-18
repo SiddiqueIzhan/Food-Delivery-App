@@ -61,8 +61,8 @@ const NavBar = ({ showSearch, setShowSearch }) => {
         onClick={() => setShowMenu(false)}
       >
         <div
-          className="w-[250px] h-full bg-white absolute duration-500 p-4"
-          style={{ transform: `translateX(${showMenu ? "45%" : "150%"})` }}
+          className="w-[250px] h-full bg-white absolute top-0 right-0 duration-500 p-4"
+          style={{ transform: `translateX(${showMenu ? "0%" : "100%"})` }}
           onClick={(e) => e.stopPropagation()}
         >
           <IoMdClose

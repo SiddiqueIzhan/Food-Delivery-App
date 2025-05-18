@@ -254,12 +254,12 @@ const OnlineDelivery = ({ showSearch, setShowSearch }) => {
         </div>
 
         <div
-          className={`w-full flex flex-wrap ${
+          className={`w-full grid grid-cols-2 md:grid-cols-4 ${
             isAtTop ? "mt-16 md:mt-20" : "mt-5"
           } gap-4 md:gap-6`}
         >
           {filteredData.map((cat, index) => (
-            <Card key={index} cat={cat} show={true} />
+            <Card key={index} cat={cat} show={true} topSect={false} />
           ))}
         </div>
 

@@ -9,16 +9,16 @@ const Category = () => {
   // Update item width based on screen size
   const updateItemWidth = () => {
     if (window.innerWidth < 768) {
-      setItemWidth(110); // Smaller width for mobile
+      setItemWidth(30.4); // Smaller width for mobile
     } else {
-      setItemWidth(144); // Default width for larger screens
+      setItemWidth(9.4); // Default width for larger screens
     }
   };
 
   useEffect(() => {
     const interval = setInterval(() => {
       setSlide((prev) => (prev < 12 ? prev + 3 : 0));
-    }, 5000);
+    }, 2000);
     return () => clearInterval(interval);
   }, []);
 
@@ -39,16 +39,6 @@ const Category = () => {
     return () => window.removeEventListener("resize", updateItemWidth);
   }, []);
 
-  useEffect(() => {
-    slide < 12
-      ? setTimeout(() => {
-          setSlide(slide + 3);
-        }, 3000)
-      : setTimeout(() => {
-          setSlide(0);
-        }, 3000);
-  });
-
   return (
     <div className="max-w-[100vw] md:max-w-[1200px] md:mx-auto p-4 md:mt-3">
       <div className="flex items-center justify-between">
@@ -63,7 +53,7 @@ const Category = () => {
             className={`w-1/4 md:w-[144px] shrink-0 
             ease-out`}
             style={{
-              transform: `translateX(${-itemWidth * slide}px)`,
+              transform: `translateX(${-itemWidth * slide}vw)`,
             }}
           >
             <img src={`${apiUrl}/images/${cat.image}`} alt="food" />

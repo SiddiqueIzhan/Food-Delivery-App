@@ -64,6 +64,7 @@ const TopRest = () => {
             slide={slide}
             cardWidth={cardWidth}
             show={false}
+            topSect={true}
           />
         ))}
       </div>
