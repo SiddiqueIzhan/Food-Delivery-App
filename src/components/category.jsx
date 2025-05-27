@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { apiUrl } from "./card";
+import { apiUrl } from "./parent";
 
-const Category = () => {
-  const [category, setCategory] = useState([]);
+const Category = ({ categories }) => {
   const [slide, setSlide] = useState(0);
   const [itemWidth, setItemWidth] = useState(144); // Default for desktop
 
@@ -22,18 +21,7 @@ const Category = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const fetchCategories = async () => {
-    try {
-      const response = await fetch(`${apiUrl}/categories`);
-      const data = await response.json();
-      setCategory(data);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
   useEffect(() => {
-    fetchCategories();
     updateItemWidth(); // Set initial item width
     window.addEventListener("resize", updateItemWidth); // Update on window resize
     return () => window.removeEventListener("resize", updateItemWidth);
@@ -47,7 +35,7 @@ const Category = () => {
         </h1>
       </div>
       <div className="w-full h-[102.5px] md:h-[180px] flex overflow-hidden mt-5 relative z-10">
-        {category.map((cat) => (
+        {categories.map((cat) => (
           <div
             key={cat.path}
             className={`w-1/4 md:w-[144px] shrink-0 

@@ -1,21 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
 import { MdStars } from "react-icons/md";
-import Card, { apiUrl } from "./card";
+import Card from "./card";
 
-const TopRest = () => {
-  const [restData, setRestData] = useState([]);
+const TopRest = ({ restaurants }) => {
   const [slide, setSlide] = useState(0);
   const [cardWidth, setCardWidth] = useState(155);
-  useEffect(() => {
-    // Fetch restaurant data
-    const fetchRestData = async () => {
-      const response = await fetch(`${apiUrl}/top-restaurant-chains`);
-      const data = await response.json();
-      setRestData(data);
-    };
-    fetchRestData();
-  }, []);
 
   useEffect(() => {
     // Adjust card width based on screen size
@@ -57,7 +47,7 @@ const TopRest = () => {
         </div>
       </div>
       <div className="w-full h-[187px] md:h-[334px] flex md:overflow-hidden mt-5 relative z-10 gap-4 md:gap-8 overflow-scroll no-scrollbar">
-        {restData.map((cat, index) => (
+        {restaurants.map((cat, index) => (
           <Card
             key={index}
             cat={cat}

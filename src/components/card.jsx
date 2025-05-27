@@ -1,7 +1,6 @@
 import React from "react";
 import { MdStars } from "react-icons/md";
-
-export const apiUrl = import.meta.env.VITE_API_URL;
+import { apiUrl } from "./parent";
 
 const Card = ({ cat, slide, cardWidth, show, topSect }) => {
   const value = slide * cardWidth;
